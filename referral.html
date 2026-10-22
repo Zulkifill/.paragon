@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#6d28a8">
+  <meta name="description" content="Open your Paragon Lite referral invite.">
+  <title>Paragon Lite — Referral Invite</title>
+  <style>
+    :root { color-scheme: dark; --bg:#10091b; --card:#1b1129; --purple:#8b5bd1; --text:#faf7ff; --muted:#c5b9d5; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; padding:24px; background:radial-gradient(circle at top,#392052 0,transparent 52%),var(--bg); color:var(--text); font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    main { width:100%; max-width:440px; padding:30px; border:1px solid #ffffff20; border-radius:24px; background:var(--card); box-shadow:0 24px 80px #0006; text-align:center; }
+    .mark { display:grid; place-items:center; width:58px; height:58px; margin:0 auto 16px; border-radius:18px; background:#8b5bd133; color:#d9c3ff; font-size:28px; font-weight:900; }
+    h1 { margin:0 0 8px; font-size:28px; line-height:1.2; }
+    p { color:var(--muted); margin:10px 0 20px; }
+    .code { padding:15px; margin:18px 0; border:1px dashed #b99ae8; border-radius:14px; color:#e2d1ff; font-size:27px; font-weight:850; letter-spacing:5px; overflow-wrap:anywhere; }
+    a,button { display:block; width:100%; padding:13px 16px; border:0; border-radius:12px; text-decoration:none; font:700 15px system-ui,-apple-system,"Segoe UI",sans-serif; cursor:pointer; }
+    .primary { background:var(--purple); color:white; margin-bottom:10px; }
+    .secondary { background:#ffffff10; color:var(--text); border:1px solid #ffffff25; }
+    .note { font-size:13px; margin:18px 0 0; }
+    #status { min-height:20px; font-size:13px; color:#d7c4f2; margin:10px 0 0; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="mark" aria-hidden="true">P</div>
+    <h1>You're invited to Paragon Lite</h1>
+    <p>Open the app to connect this referral to your account. You can also copy the code and apply it in the app.</p>
+    <div class="code" id="code">--------</div>
+    <button class="secondary" id="copy" type="button">Copy referral code</button>
+    <p id="status" role="status" aria-live="polite"></p>
+    <a class="primary" id="open" href="https://play.google.com/store/apps/details?id=com.paragonlite.app">Open Paragon Lite</a>
+    <a class="secondary" href="https://play.google.com/store/apps/details?id=com.paragonlite.app">Get Paragon Lite on Google Play</a>
+    <p class="note">If the app is already installed, choose “Open Paragon Lite.” Otherwise, install it, return to this invite, and open it. You can enter the copied code under Refer &amp; Earn if needed.</p>
+  </main>
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var raw = (params.get('ref') || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
+      var code = raw.length === 8 ? raw : '';
+      var codeEl = document.getElementById('code');
+      var openEl = document.getElementById('open');
+      var copyEl = document.getElementById('copy');
+      var statusEl = document.getElementById('status');
+      if (code) {
+        codeEl.textContent = code;
+        openEl.href = 'paragonlite://referrals?ref=' + encodeURIComponent(code);
+      } else {
+        codeEl.textContent = 'Invalid invite';
+        copyEl.disabled = true;
+        copyEl.style.opacity = '.5';
+        openEl.textContent = 'Get Paragon Lite';
+        statusEl.textContent = 'This invite link is missing a valid referral code.';
+      }
+      copyEl.addEventListener('click', async function () {
+        if (!code) return;
+        try {
+          await navigator.clipboard.writeText(code);
+          statusEl.textContent = 'Referral code copied.';
+        } catch (_) {
+          statusEl.textContent = 'Your referral code is ' + code + '. Copy it manually.';
+        }
+      });
+    }());
+  </script>
+</body>
+</html>
